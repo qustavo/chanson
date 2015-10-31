@@ -40,3 +40,6 @@ func main() {
 	fmt.Printf("%v", buf.String())
 }
 ```
+
+For more examples and documentarion see the [Godoc](http://godoc.org/github.com/gchaincl/chanson).
+

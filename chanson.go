@@ -1,3 +1,6 @@
+// Create Json Streams in Go.
+// Chanson makes easy to fetch data from a channel and encode it.
+// It is not an encoder it self, by default it relies on json.Encoder but its flexible enough to let you use whatever you want.
 package chanson
 
 import (
@@ -9,11 +12,15 @@ type Chanson struct {
 	w io.Writer
 }
 
+// New returns a new json stream.
+// The stream will use w for write the output
 func New(w io.Writer) Chanson {
 	cs := Chanson{w: w}
 	return cs
 }
 
+// Object will execute the callback inside an object context
+// this is: "{" f() "}"
 func (cs *Chanson) Object(f func(obj Object)) {
 	cs.w.Write([]byte("{"))
 	if f != nil {
@@ -22,6 +29,8 @@ func (cs *Chanson) Object(f func(obj Object)) {
 	cs.w.Write([]byte("}"))
 }
 
+// Object will execute the callback inside an array context
+// this is: "[" f() "]"
 func (cs *Chanson) Array(f func(a Array)) {
 	cs.w.Write([]byte("["))
 	if f != nil {
@@ -35,6 +44,7 @@ type Object struct {
 	empty bool
 }
 
+// Sets an element into the object
 func (obj *Object) Set(key string, val interface{}) {
 	if !obj.empty {
 		obj.cs.w.Write([]byte(","))
@@ -51,6 +61,7 @@ type Array struct {
 	empty bool
 }
 
+// Pushes an item into the array
 func (a *Array) Push(val interface{}) {
 	if !a.empty {
 		a.cs.w.Write([]byte(","))
