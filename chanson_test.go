@@ -23,9 +23,7 @@ func trim(s string) string {
 
 func TestObjectKeyVal(t *testing.T) {
 	buf := bytes.NewBuffer(nil)
-	cs := New(buf)
-
-	cs.Object(func(obj Object) {
+	New(buf).Object(func(obj Object) {
 		obj.Set("foo", "bar")
 		obj.Set("fun", func(w io.Writer) {
 			w.Write([]byte(`"val"`))
@@ -41,9 +39,7 @@ func TestObjectKeyVal(t *testing.T) {
 
 func TestArrays(t *testing.T) {
 	buf := bytes.NewBuffer(nil)
-	cs := New(buf)
-
-	cs.Array(func(a Array) {
+	New(buf).Array(func(a Array) {
 		a.Push(func(w io.Writer) {
 			w.Write([]byte("1"))
 		})
@@ -59,9 +55,7 @@ func TestArrays(t *testing.T) {
 
 func TestObjectWithArray(t *testing.T) {
 	buf := bytes.NewBuffer(nil)
-	cs := New(buf)
-
-	cs.Object(func(obj Object) {
+	New(buf).Object(func(obj Object) {
 		obj.Set("id", 10)
 		obj.Set("list", func(cs *Chanson) {
 			cs.Array(func(a Array) {
@@ -82,9 +76,6 @@ func TestWithChannels(t *testing.T) {
 	intCh := make(chan int, 5)
 	boolCh := make(chan bool, 2)
 
-	buf := bytes.NewBuffer(nil)
-	cs := New(buf)
-
 	go func() {
 		boolCh <- true
 		for i := 0; i < cap(intCh); i++ {
@@ -97,7 +88,8 @@ func TestWithChannels(t *testing.T) {
 
 	}()
 
-	cs.Object(func(obj Object) {
+	buf := bytes.NewBuffer(nil)
+	New(buf).Object(func(obj Object) {
 		obj.Set("int", func(cs *Chanson) {
 			cs.Array(func(a Array) {
 				for n := range intCh {

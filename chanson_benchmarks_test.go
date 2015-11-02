@@ -32,8 +32,7 @@ func BenchmarkChanson(b *testing.B) {
 	lo := buildLargeObject(b.N)
 	b.ResetTimer()
 
-	cs := New(ioutil.Discard)
-	cs.Object(func(obj Object) {
+	New(ioutil.Discard).Object(func(obj Object) {
 		for k, v := range lo {
 			obj.Set(k, v)
 		}
