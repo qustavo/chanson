@@ -60,7 +60,10 @@ func (obj *Object) Set(key string, val Value) {
 		obj.empty = false
 	}
 
-	obj.cs.w.Write([]byte(`"` + key + `":`))
+	quotedKey, _ := json.Marshal(key)
+
+	obj.cs.w.Write(quotedKey)
+	obj.cs.w.Write([]byte(":"))
 	handleValue(obj.cs, val)
 }
 

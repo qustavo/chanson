@@ -28,13 +28,15 @@ func TestObjectKeyVal(t *testing.T) {
 		obj.Set("fun", func(w io.Writer) {
 			w.Write([]byte(`"val"`))
 		})
+		obj.Set("a\nnewline", "baz")
 	})
 
 	assert.Equal(t, trim(`
 	{
-	  "foo": "bar",
-  	  "fun": "val"
-  	}`), trim(buf.String()))
+		"foo": "bar",
+		"fun": "val",
+		"a\nnewline": "baz"
+	}`), trim(buf.String()))
 }
 
 func TestArrays(t *testing.T) {
