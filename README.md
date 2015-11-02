@@ -1,4 +1,4 @@
-# Chanson [![Build Status](https://travis-ci.org/gchaincl/dotsql.svg)](https://travis-ci.org/gchaincl/dotsql)
+# Chanson [![Build Status](https://travis-ci.org/gchaincl/chanson.svg)](https://travis-ci.org/gchaincl/dotsql)
 Create Json Streams in Go
 
 # Why
