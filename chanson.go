@@ -42,7 +42,7 @@ func (cs *Chanson) Object(f func(obj Object)) {
 func (cs *Chanson) Array(f func(a Array)) {
 	cs.w.Write([]byte("["))
 	if f != nil {
-		f(Array{cs: cs, empty: true})
+		f(newArray(cs))
 	}
 	cs.w.Write([]byte("]"))
 }
@@ -67,6 +67,10 @@ func (obj *Object) Set(key string, val Value) {
 type Array struct {
 	cs    *Chanson
 	empty bool
+}
+
+func newArray(cs *Chanson) Array {
+	return Array{cs: cs, empty: true}
 }
 
 // Pushes an item into the array
