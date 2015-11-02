@@ -6,6 +6,7 @@ package chanson
 import (
 	"encoding/json"
 	"io"
+	"strconv"
 )
 
 type Chanson struct {
@@ -60,9 +61,7 @@ func (obj *Object) Set(key string, val Value) {
 		obj.empty = false
 	}
 
-	quotedKey, _ := json.Marshal(key)
-
-	obj.cs.w.Write(quotedKey)
+	obj.cs.w.Write([]byte(strconv.Quote(key)))
 	obj.cs.w.Write([]byte(":"))
 	handleValue(obj.cs, val)
 }
