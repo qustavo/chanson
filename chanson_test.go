@@ -28,15 +28,34 @@ func TestObjectKeyVal(t *testing.T) {
 		obj.Set("fun", func(w io.Writer) {
 			w.Write([]byte(`"val"`))
 		})
-		obj.Set("a\nnewline", "baz")
 	})
 
 	assert.Equal(t, trim(`
 	{
 		"foo": "bar",
-		"fun": "val",
-		"a\nnewline": "baz"
+		"fun": "val"
 	}`), trim(buf.String()))
+}
+
+func TestObjectKeyEncoding(t *testing.T) {
+
+	for _, test := range []struct {
+		key      string
+		expected string
+	}{
+		{"key\n", `"key\n"`},
+		{"key\t", `"key\t"`},
+		{"key\b", `"key\b"`},
+		{"key\f", `"key\f"`},
+		{"key\\", `"key\\"`},
+	} {
+		buf := bytes.NewBuffer(nil)
+		New(buf).Object(func(obj Object) {
+			obj.Set(test.key, 0)
+		})
+
+		assert.Equal(t, "{"+test.expected+":0}", trim(buf.String()))
+	}
 }
 
 func TestArrays(t *testing.T) {
