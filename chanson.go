@@ -29,7 +29,7 @@ func New(w io.Writer) Chanson {
 
 // Object will execute the callback inside an object context
 // this is: "{" f() "}"
-func (cs Chanson) Object(f func(obj Object)) {
+func (cs Chanson) Object(f func(Object)) {
 	cs.w.Write([]byte("{"))
 	if f != nil {
 		f(Object{cs: &cs, empty: true})
@@ -39,7 +39,7 @@ func (cs Chanson) Object(f func(obj Object)) {
 
 // Object will execute the callback inside an array context
 // this is: "[" f() "]"
-func (cs Chanson) Array(f func(a Array)) {
+func (cs Chanson) Array(f func(Array)) {
 	cs.w.Write([]byte("["))
 	if f != nil {
 		f(newArray(&cs))
