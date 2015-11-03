@@ -10,7 +10,8 @@ import (
 )
 
 type Chanson struct {
-	w io.Writer
+	w   io.Writer
+	enc *json.Encoder
 }
 
 // Value is the types that functions like Array.Push() or Object.Set() can accepts as values.
@@ -24,7 +25,10 @@ type Value interface{}
 // New returns a new json stream.
 // The stream will use w for write the output
 func New(w io.Writer) Chanson {
-	cs := Chanson{w: w}
+	cs := Chanson{
+		w:   w,
+		enc: json.NewEncoder(w),
+	}
 	return cs
 }
 
@@ -91,10 +95,10 @@ func handleValue(cs *Chanson, val Value) {
 	case func(io.Writer):
 		t(cs.w)
 	case func(*json.Encoder):
-		t(json.NewEncoder(cs.w))
+		t(cs.enc)
 	case func(*Chanson):
 		t(cs)
 	default:
-		json.NewEncoder(cs.w).Encode(val)
+		cs.enc.Encode(val)
 	}
 }
