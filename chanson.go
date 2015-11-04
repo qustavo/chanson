@@ -16,11 +16,9 @@ type Chanson struct {
 
 // Value is the types that functions like Array.Push() or Object.Set() can accepts as values.
 // Custom Value types are:
-//	- func(io.Writer)
-//	- func(*json.Encoder)
-//	- func(*Chanson)
 //	- func(Array)
 //	- func(Object)
+//	- func(io.Writer)
 // If Value is none of the above, it will be encoded using json.Encoder
 type Value interface{}
 
@@ -94,16 +92,12 @@ func (a *Array) Push(val Value) {
 
 func handleValue(cs *Chanson, val Value) {
 	switch t := val.(type) {
-	case func(io.Writer):
-		t(cs.w)
-	case func(*json.Encoder):
-		t(cs.enc)
-	case func(*Chanson):
-		t(cs)
 	case func(Array):
 		cs.Array(t)
 	case func(Object):
 		cs.Object(t)
+	case func(io.Writer):
+		t(cs.w)
 	default:
 		cs.enc.Encode(val)
 	}

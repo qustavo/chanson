@@ -2,7 +2,6 @@ package chanson
 
 import (
 	"bytes"
-	"encoding/json"
 	"io"
 	"strings"
 	"testing"
@@ -66,24 +65,15 @@ func TestArrays(t *testing.T) {
 		})
 		a.Push(2)
 		a.Push(3)
-		a.Push(func(enc *json.Encoder) {
-			enc.Encode(4)
-		})
 	})
 
-	assert.Equal(t, `[1,2,3,4]`, trim(buf.String()))
+	assert.Equal(t, `[1,2,3]`, trim(buf.String()))
 }
 
 func TestObjectSetWithDifferentValueTypes(t *testing.T) {
 	buf := bytes.NewBuffer(nil)
 	New(buf).Object(func(obj Object) {
 		obj.Set("id", 10)
-		obj.Set("ctx", func(cs *Chanson) {
-			cs.Array(func(a Array) {
-				a.Push(1)
-				a.Push(2)
-			})
-		})
 		obj.Set("array", func(arr Array) {
 			arr.Push("foo")
 			arr.Push("bar")
@@ -96,7 +86,6 @@ func TestObjectSetWithDifferentValueTypes(t *testing.T) {
 	assert.Equal(t, trim(`
 	{
 	  "id": 10,
-	  "ctx": [1,2],
 	  "array": ["foo", "bar"],
 	  "obj": {"foo":"bar"}
   	}`), trim(buf.String()))
@@ -120,19 +109,16 @@ func TestWithChannels(t *testing.T) {
 
 	buf := bytes.NewBuffer(nil)
 	New(buf).Object(func(obj Object) {
-		obj.Set("int", func(cs *Chanson) {
-			cs.Array(func(a Array) {
-				for n := range intCh {
-					a.Push(n)
-				}
-			})
+		obj.Set("int", func(a Array) {
+			for n := range intCh {
+				a.Push(n)
+			}
 		})
-		obj.Set("bool", func(cs *Chanson) {
-			cs.Array(func(a Array) {
-				for n := range boolCh {
-					a.Push(n)
-				}
-			})
+
+		obj.Set("bool", func(a Array) {
+			for n := range boolCh {
+				a.Push(n)
+			}
 		})
 	})
 
