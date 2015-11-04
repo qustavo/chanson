@@ -74,22 +74,31 @@ func TestArrays(t *testing.T) {
 	assert.Equal(t, `[1,2,3,4]`, trim(buf.String()))
 }
 
-func TestObjectWithArray(t *testing.T) {
+func TestObjectSetWithDifferentValueTypes(t *testing.T) {
 	buf := bytes.NewBuffer(nil)
 	New(buf).Object(func(obj Object) {
 		obj.Set("id", 10)
-		obj.Set("list", func(cs *Chanson) {
+		obj.Set("ctx", func(cs *Chanson) {
 			cs.Array(func(a Array) {
 				a.Push(1)
 				a.Push(2)
 			})
+		})
+		obj.Set("array", func(arr Array) {
+			arr.Push("foo")
+			arr.Push("bar")
+		})
+		obj.Set("obj", func(_obj Object) {
+			_obj.Set("foo", "bar")
 		})
 	})
 
 	assert.Equal(t, trim(`
 	{
 	  "id": 10,
-	  "list": [1,2]
+	  "ctx": [1,2],
+	  "array": ["foo", "bar"],
+	  "obj": {"foo":"bar"}
   	}`), trim(buf.String()))
 }
 

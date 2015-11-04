@@ -19,6 +19,8 @@ type Chanson struct {
 //	- func(io.Writer)
 //	- func(*json.Encoder)
 //	- func(*Chanson)
+//	- func(Array)
+//	- func(Object)
 // If Value is none of the above, it will be encoded using json.Encoder
 type Value interface{}
 
@@ -98,6 +100,10 @@ func handleValue(cs *Chanson, val Value) {
 		t(cs.enc)
 	case func(*Chanson):
 		t(cs)
+	case func(Array):
+		cs.Array(t)
+	case func(Object):
+		cs.Object(t)
 	default:
 		cs.enc.Encode(val)
 	}
