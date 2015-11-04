@@ -91,6 +91,17 @@ func TestObjectSetWithDifferentValueTypes(t *testing.T) {
   	}`), trim(buf.String()))
 }
 
+func TestWritesNullWhenValueEncodingFails(t *testing.T) {
+	buf := bytes.NewBuffer(nil)
+	New(buf).Object(func(obj Object) {
+		// func(){} will return an error when tried to be json.Encoder#Encode()
+		val := func() {}
+		obj.Set("key", val)
+	})
+
+	assert.Equal(t, `{"key":null}`, trim(buf.String()))
+}
+
 func TestWithChannels(t *testing.T) {
 	intCh := make(chan int, 5)
 	boolCh := make(chan bool, 2)

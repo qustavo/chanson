@@ -99,6 +99,10 @@ func handleValue(cs *Chanson, val Value) {
 	case func(io.Writer):
 		t(cs.w)
 	default:
-		cs.enc.Encode(val)
+		err := cs.enc.Encode(val)
+		if err != nil {
+			//TODO: should panic?!
+			cs.w.Write([]byte("null"))
+		}
 	}
 }
