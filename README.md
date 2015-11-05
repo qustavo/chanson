@@ -1,4 +1,4 @@
-# Chanson [![Build Status](https://travis-ci.org/gchaincl/chanson.svg)](https://travis-ci.org/gchaincl/chanson)
+# Chanson [![Build Status](https://travis-ci.org/gchaincl/chanson.svg)](https://travis-ci.org/gchaincl/chanson) [![Coverage Status](https://coveralls.io/repos/gchaincl/chanson/badge.svg?branch=coveralls&service=github)](https://coveralls.io/github/gchaincl/chanson?branch=coveralls)
 Create Json Streams in Go
 
 # Why
