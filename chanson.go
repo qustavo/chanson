@@ -67,7 +67,7 @@ func (obj *Object) Set(key string, val Value) {
 
 	obj.cs.w.Write([]byte(strconv.Quote(key)))
 	obj.cs.w.Write([]byte(":"))
-	handleValue(obj.cs, val)
+	handleValue(*obj.cs, val)
 }
 
 type Array struct {
@@ -87,10 +87,10 @@ func (a *Array) Push(val Value) {
 		a.empty = false
 	}
 
-	handleValue(a.cs, val)
+	handleValue(*a.cs, val)
 }
 
-func handleValue(cs *Chanson, val Value) {
+func handleValue(cs Chanson, val Value) {
 	switch t := val.(type) {
 	case func(Array):
 		cs.Array(t)
