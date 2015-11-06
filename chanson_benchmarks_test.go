@@ -8,8 +8,6 @@ import (
 )
 
 func buildLargeObject(size int) map[string]string {
-	size = size * 900000
-
 	obj := make(map[string]string, size)
 
 	for i := 0; i < size; i++ {
