@@ -1,5 +1,5 @@
 # Chanson [![Build Status](https://travis-ci.org/gchaincl/chanson.svg)](https://travis-ci.org/gchaincl/chanson) [![Coverage Status](https://coveralls.io/repos/gchaincl/chanson/badge.svg?branch=coveralls&service=github)](https://coveralls.io/github/gchaincl/chanson?branch=coveralls)
-Create Json Streams in Go
+Json Streams Modeling in Go
 
 # Rationale
 Let's say you want to json-encode a large amount of data from your database and send it through the network.
@@ -7,7 +7,7 @@ So you pack the data into a structure and then you call `json.NewEncoder(w).Enco
 _a)_ If the data is to big, you will end up using a massive amount of memory and
 _b)_ your client will need to wait all that time before receiving a single bit.
 
-`Chanson` provides a simple DSL that allows you to json-encode data and stream it through an [io.Writer](https://golang.org/pkg/io/#Writer) as you produce it.
+`Chanson` provides a DSL that allows you to json-encode data and stream it through an [io.Writer](https://golang.org/pkg/io/#Writer) as you produce it.
 
 # Example
 
