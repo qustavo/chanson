@@ -1,13 +1,7 @@
 # Chanson [![Build Status](https://travis-ci.org/gchaincl/chanson.svg)](https://travis-ci.org/gchaincl/chanson) [![Coverage Status](https://coveralls.io/repos/gchaincl/chanson/badge.svg?branch=coveralls&service=github)](https://coveralls.io/github/gchaincl/chanson?branch=coveralls)
-Json Streams Modeling in Go
-
-# Rationale
-Let's say you want to json-encode a large amount of data from your database and send it through the network.
-So you pack the data into a structure and then you call `json.NewEncoder(w).Encode(theData)`, but this has some implications:
-_a)_ If the data is to big, you will end up using a massive amount of memory and
-_b)_ your client will need to wait all that time before receiving a single bit.
-
-`Chanson` provides a DSL that allows you to json-encode data and stream it through an [io.Writer](https://golang.org/pkg/io/#Writer) as you produce it.
+Package chanson provides a flexible way to construct JSON documents.
+As chanson populates Arrays and Objects from functions, it's perfectly suitable for streaming jsons as you build it.
+It is not an encoder it self, by default it relies on json.Encoder but its flexible enough to let you use whatever you want.
 
 # Example
 

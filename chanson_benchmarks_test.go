@@ -22,7 +22,10 @@ func BenchmarkNativeEncoder(b *testing.B) {
 	lo := buildLargeObject(b.N)
 	b.ResetTimer()
 
-	json.NewEncoder(ioutil.Discard).Encode(lo)
+	err := json.NewEncoder(ioutil.Discard).Encode(lo)
+	if err != nil {
+		panic(err)
+	}
 
 }
 

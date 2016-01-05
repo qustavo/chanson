@@ -36,7 +36,7 @@ func ExampleObject() {
 	cs.Object(func(obj Object) {
 		obj.Set("foo", "bar")
 		obj.Set("fun", func(enc *json.Encoder) {
-			enc.Encode([]int{1, 2, 3})
+			_ = enc.Encode([]int{1, 2, 3})
 		})
 	})
 

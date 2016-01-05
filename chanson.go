@@ -1,5 +1,5 @@
-// Create Json Streams in Go.
-// Chanson makes easy to fetch data from a channel and encode it.
+// Package chanson provides a flexible way to construct JSON documents.
+// As chanson populates Arrays and Objects from functions, it's perfectly suitable for streaming jsons as you build it (see examples).
 // It is not an encoder it self, by default it relies on json.Encoder but its flexible enough to let you use whatever you want.
 package chanson
 
@@ -9,6 +9,7 @@ import (
 	"strconv"
 )
 
+// Chanson struct is the handler representing the current json being encoded
 type Chanson struct {
 	w   io.Writer
 	enc *json.Encoder
@@ -35,41 +36,43 @@ func New(w io.Writer) Chanson {
 // Object will execute the callback inside an object context
 // this is: "{" f() "}"
 func (cs Chanson) Object(f func(Object)) {
-	cs.w.Write([]byte("{"))
+	_, _ = cs.w.Write([]byte("{"))
 	if f != nil {
 		f(Object{cs: &cs, empty: true})
 	}
-	cs.w.Write([]byte("}"))
+	_, _ = cs.w.Write([]byte("}"))
 }
 
-// Object will execute the callback inside an array context
+// Array will execute the callback inside an array context
 // this is: "[" f() "]"
 func (cs Chanson) Array(f func(Array)) {
-	cs.w.Write([]byte("["))
+	_, _ = cs.w.Write([]byte("["))
 	if f != nil {
 		f(newArray(&cs))
 	}
-	cs.w.Write([]byte("]"))
+	_, _ = cs.w.Write([]byte("]"))
 }
 
+// Object struct represent a Json Object ({}).
 type Object struct {
 	cs    *Chanson
 	empty bool
 }
 
-// Sets an element into the object
+// Set add an element into the object
 func (obj *Object) Set(key string, val Value) {
 	if !obj.empty {
-		obj.cs.w.Write([]byte(","))
+		_, _ = obj.cs.w.Write([]byte(","))
 	} else {
 		obj.empty = false
 	}
 
-	obj.cs.w.Write([]byte(strconv.Quote(key)))
-	obj.cs.w.Write([]byte(":"))
+	_, _ = obj.cs.w.Write([]byte(strconv.Quote(key)))
+	_, _ = obj.cs.w.Write([]byte(":"))
 	handleValue(*obj.cs, val)
 }
 
+// Array struct represents a Json Array ([]).
 type Array struct {
 	cs    *Chanson
 	empty bool
@@ -79,10 +82,10 @@ func newArray(cs *Chanson) Array {
 	return Array{cs: cs, empty: true}
 }
 
-// Pushes an item into the array
+// Push pushes an item into the array
 func (a *Array) Push(val Value) {
 	if !a.empty {
-		a.cs.w.Write([]byte(","))
+		_, _ = a.cs.w.Write([]byte(","))
 	} else {
 		a.empty = false
 	}
@@ -102,7 +105,7 @@ func handleValue(cs Chanson, val Value) {
 		err := cs.enc.Encode(val)
 		if err != nil {
 			//TODO: should panic?!
-			cs.w.Write([]byte("null"))
+			_, _ = cs.w.Write([]byte("null"))
 		}
 	}
 }

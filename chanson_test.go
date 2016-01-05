@@ -25,7 +25,9 @@ func TestObjectKeyVal(t *testing.T) {
 	New(buf).Object(func(obj Object) {
 		obj.Set("foo", "bar")
 		obj.Set("fun", func(w io.Writer) {
-			w.Write([]byte(`"val"`))
+			if _, err := w.Write([]byte(`"val"`)); err != nil {
+				panic(err)
+			}
 		})
 	})
 
@@ -61,7 +63,9 @@ func TestArrays(t *testing.T) {
 	buf := bytes.NewBuffer(nil)
 	New(buf).Array(func(a Array) {
 		a.Push(func(w io.Writer) {
-			w.Write([]byte("1"))
+			if _, err := w.Write([]byte("1")); err != nil {
+				panic(err)
+			}
 		})
 		a.Push(2)
 		a.Push(3)
